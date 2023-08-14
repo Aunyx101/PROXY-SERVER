@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Blocked List</title>
+  </head>
+  <body>
+    <h1>Blocked List</h1>
+    <form>
+      <label for="input">Add item:</label>
+      <input type="text" id="input" name="input">
+      <button type="button" onclick="addItem()">Add</button>
+    </form>
+    <br>
+    <form>
+      <label for="select">Remove item:</label>
+      <select id="select" name="select">
+      </select>
+      <button type="button" onclick="removeItem()">Remove</button>
+    </form>
+    <br>
+    <button type="button" onclick="saveList()">Save List</button>
+    
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      var blockedList = [];
+      function addItem() {
+        var item = document.getElementById("input").value;
+        blockedList.push(item);
+        var select = document.getElementById("select");
+        var option = document.createElement("option");
+        option.text = item;
+        select.add(option);
+      }
+      function removeItem() {
+        var index = document.getElementById("select").selectedIndex;
+        if (index > -1) {
+          blockedList.splice(index, 1);
+          document.getElementById("select").remove(index);
+        }
+      }
+      function saveList() {
+        axios.post('/save_blocked_list.php', {
+          blockedList: blockedList
+        })
+        .then(function (response) {
+          console.log(response.data);
+          // Handle success response from server
+        })
+        .catch(function (error) {
+          console.log(error);
+          // Handle error response from server
+        });
+      }
+    </script>
+  </body>
+</html>
